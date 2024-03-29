@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculator</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container text-align-center justify-content-center mt-5">
+      <div class="row">
+          <div class="col">
+          <div class="calculator">
+          <h2 style="margin-left: 60px;color: white;">CALCULATOR</h2>
+              <div class="result bg-light">0</div>
+                  <div class="row">
+                        <button class="col-3 buttons btn btn-secondary" onclick="clearResult()">AC</button>
+                        <button class="col-3 buttons btn btn-secondary" onclick="toggleSign()">+/-</button>
+                        <button class="col-3 buttons btn btn-secondary" onclick="percentage()">%</button>
+                        <button class="col-3 buttons btn btn-light" onclick="deleteLast()">⌫</button>
+              </div>
+                    <div class="row">
+                        <button class="col-3 buttons btn btn-dark" onclick="appendNumber(7)">7</button>
+                        <button class="col-3 buttons btn btn-dark" onclick="appendNumber(8)">8</button>
+                        <button class="col-3 buttons btn btn-dark" onclick="appendNumber(9)">9</button>
+                        <button class="col-3 buttons btn btn-warning" onclick="setOperation('/')">/</button>
+                    </div>
+                  <div class="row">
+                        <button class="col-3 buttons btn btn-dark" onclick="appendNumber(4)">4</button>
+                        <button class="col-3 buttons btn btn-dark" onclick="appendNumber(5)">5</button>
+                        <button class="col-3 buttons btn btn-dark" onclick="appendNumber(6)">6</button>
+                        <button class="col-3 buttons btn btn-warning" onclick="setOperation('*')">*</button>
+                    </div>
+                <div class="row">
+                        <button class="col-3 buttons btn btn-dark" onclick="appendNumber(1)">1</button>
+                        <button class="col-3 buttons btn btn-dark" onclick="appendNumber(2)">2</button>
+                        <button class="col-3 buttons btn btn-dark" onclick="appendNumber(3)">3</button>
+                        <button class="col-3 buttons btn btn-warning" onclick="setOperation('-')">-</button>
+                </div>
+              <div class="row">
+                        <button class="col-3 buttons btn btn-dark" onclick="appendNumber(0)">0</button>
+                        <button class="col-3 buttons btn btn-dark" onclick="appendDot()">.</button>
+                        <button class="col-3 buttons btn btn-dark" onclick="calculateResult()">=</button>
+                        <button class="col-3 buttons btn btn-warning" onclick="setOperation('+')">+</button>
+                </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentInput = '0';
+        let currentOperation = null;
+        let previousInput = '0';
+
+        function updateDisplay() {
+            document.querySelector('.result').innerText = currentInput;
+        }
+
+        function appendNumber(number) {
+            if (currentInput === '0') {
+                currentInput = number.toString();
+            } else {
+                currentInput += number.toString();
+            }
+            updateDisplay();
+        }
+
+        function appendDot() {
+            if (!currentInput.includes('.')) {
+                currentInput += '.';
+            }
+            updateDisplay();
+        }
+
+        function clearResult() {
+            currentInput = '0';
+            previousInput = '0';
+            currentOperation = null;
+            updateDisplay();
+        }
+
+        function toggleSign() {
+            currentInput = (parseFloat(currentInput) * -1).toString();
+            updateDisplay();
+        }
+
+        function percentage() {
+            currentInput = (parseFloat(currentInput) / 100).toString();
+            updateDisplay();
+        }
+
+        function deleteLast() {
+            currentInput = currentInput.slice(0, -1);
+            if (currentInput === '') {
+                currentInput = '0';
+            }
+            updateDisplay();
+        }
+
+        function setOperation(operation) {
+            if (currentOperation !== null) {
+                calculateResult();
+            }
+            previousInput = currentInput;
+            currentInput = '0';
+            currentOperation = operation;
+        }
+
+        function calculateResult() {
+            let result = 0;
+            const prev = parseFloat(previousInput);
+            const current = parseFloat(currentInput);
+            if (isNaN(prev) || isNaN(current)) return;
+
+            switch (currentOperation) {
+                case '+':
+                    result = prev + current;
+                    break;
+                case '-':
+                    result = prev - current;
+                    break;
+                case '*':
+                    result = prev * current;
+                    break;
+                case '/':
+                    result = prev / current;
+                    break;
+                default:
+                    return;
+            }
+            currentInput = result.toString();
+            currentOperation = null;
+            previousInput = '0';
+            updateDisplay();
+        }
+    </script>
+</body>
+</html>
